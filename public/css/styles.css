@@ -1,0 +1,19 @@
+/* 
+Color scheme default from the material site https://www.materialpalette.com/
+use the classes below for contrasting colors and keeping the site looking the same. 
+*/
+.primary {
+    background-color: #00BCD4;
+    color: #FFFFFF;
+}
+
+
+.darkPrimary {
+    background-color: #0097A7;
+    color: #FFFFFF;
+}
+
+.lightPrimary {
+    background-color: #B2EBF2;
+    color: #FFFFFF;
+}
