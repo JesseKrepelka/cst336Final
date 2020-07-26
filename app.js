@@ -18,8 +18,8 @@ app.get("/", function (req, res) {
 
 
 //Starting the web server
+//NOte can't put in other info or heroku won't work
 app.listen(process.env.PORT, process.env.IP,
-    function (err) {
-        if(err) throw err;
+    function () {
         console.log("Express server is running");
     });
