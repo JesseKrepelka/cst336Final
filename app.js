@@ -13,14 +13,13 @@ var ip = process.env.IP || "127.0.0.1";
 
 //default route
 app.get("/", function (req, res) {
-
     res.render("index");
-
 });
 
 
 //Starting the web server
-app.listen(port, ip,
-    function () {
+app.listen(process.env.PORT, process.env.IP,
+    function (err) {
+        if(err) throw err;
         console.log("Express server is running");
     });
