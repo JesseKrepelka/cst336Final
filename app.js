@@ -20,15 +20,19 @@ app.get("/login", function (req, res) {
     res.render("login")
 })
 
+app.get("/adminMenu", function (req, res){
+    res.render("adminMenu");
+})
+
 
 //Starting the web server
 //NOte can't put in other info or heroku won't work
-/* app.listen(port, ip,
-    function () {
-        console.log("Express server is running");
-    }); */
-
-app.listen(process.env.PORT, process.env.IP,
+app.listen(port, ip,
     function () {
         console.log("Express server is running");
     });
+
+/* app.listen(process.env.PORT, process.env.IP,
+    function () {
+        console.log("Express server is running");
+    }); */
