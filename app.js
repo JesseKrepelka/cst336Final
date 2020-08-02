@@ -3,9 +3,13 @@ const app = express();
 const request = require("request");
 const pool = require("./dbPool.js");
 
-//express setup
+//express setup & middleware
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+  }));
 
 //declares the port and IP for localhost and global
 var port = process.env.PORT || 8080;
@@ -16,13 +20,29 @@ app.get("/", function (req, res) {
     res.render("index");
 });
 
+
+ /**************   Login routes *****************
+  * ********************************************/
 app.get("/login", function (req, res) {
     res.render("login")
-})
+});
 
-app.get("/adminMenu", function (req, res){
-    res.render("adminMenu");
-})
+
+
+ /**************  Admin Routes *****************
+  ********************************************/
+
+app.get("/bookManager", function (req, res){
+    res.render("bookManager");
+});
+
+app.post("/updateBook", function (req, res){
+    console.log(req.body.title);
+    console.log(req.body);
+
+    res.render("bookManager");
+    //if(req.body.title)
+});
 
 
 //Starting the web server
