@@ -10,36 +10,50 @@
     </div>
     <div class="row justify-content-md-center">
         <div class="col col-md-6">
-            <form action="/updateBook" method="POST">
+            <form action="javascript:void(0)">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="title">Title:</label>
-                        <input type="text" class="form-control" id="title" placeholder="1984" required>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="1984" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="author">Author:</label>
-                        <input type="text" class="form-control" id="author" placeholder="George Orwell" required>
+                        <input type="text" class="form-control" id="author" name="author" placeholder="George Orwell" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col">
                         <label for="ISBN">ISBN: </label>
-                        <input type="text" class="form-control" id="ISBN" placeholder="9780451524935" required>
+                        <input type="text" class="form-control" id="ISBN" name="ISBN" placeholder="9780451524935" required>
                     </div>
-
                     <div class="form-group col">
                         <label for="genre">Genre:</label>
-                        <input type="text" class="form-control" placeholder="Science Fiction" id="genre">
+                        <input type="text" class="form-control" placeholder="Science Fiction" id="genre" name="genre">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="year">Year</label>
-                        <input type="number" class="form-control" id="year">
+                        <input type="number" class="form-control" id="year" name="year">
                     </div>
                 </div>
-                <button type="submit"class="btn btn-primary">Add/Update Book</button>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label for="imageURI">imageURI: </label>
+                        <input type="text" class="form-control" id="imageURI" name="imageURI" placeholder="">
+                    </div>
+                    <div class="form-group col">
+                        <label for="stock">Number in Stock: </label>
+                        <input type="number" class="form-control" id="stock" name="stock" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="btn btn-primary" id="btnUpdateBook">Add/Update Book</button>
+                    <div class="gorm-group col" id="addUpdateBook">
+
+                    </div>
+                </div>
+                
             </form>
         </div>
-
     </div>
     <br>
     <hr>
@@ -48,25 +62,16 @@
     </div>
     <div class="row justify-content-md-center">
         <div class="col col-md-6">
-            <form>
+            <form action="/bookDelete" method="POST">
                 <div class="form-row">
                     <div class="form-group col">
-
                         <label for="ISBN2">ISBN: </label>
-                        <input type="text" class="form-control" id="ISBN2" placeholder="9780451524935" required>
+                        <input type="text" class="form-control" id="ISBN2" name="ISBN2" placeholder="9780451524935" required>
                     </div>
-
-
                 </div>
                 <button type="submit" class="btn btn-primary">Delete Book</button>
             </form>
         </div>
-
-
-
-
-
         <br>
     </div>
-
     <%- include('partials/footer.ejs') %>
