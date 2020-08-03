@@ -90,35 +90,32 @@ app.post("/bookManager", function (req, res) {
             });
 
         });
-
         res.send("200");
     }
-
-    /* console.log("This is a query: ", req.query);
-    console.log("This is Params: ", req.params);
-    console.log("This is content-type: ", req.headers["content-type"]); */
-    //console.log(req);
-
 });
 
 app.post("/bookDelete", function (req, res) {
     console.log("This is Body: ", req.body);
-
     res.render("bookManager");
 })
 
 
 //Starting the web server
 //NOte can't put in other info or heroku won't work
-app.listen(port, ip,
+/* app.listen(port, ip,
+    function () {
+        console.log("Express server is running");
+    }); */
+
+app.listen(process.env.PORT, process.env.IP,
     function () {
         console.log("Express server is running");
     });
 
-/* app.listen(process.env.PORT, process.env.IP,
-    function () {
-        console.log("Express server is running");
-    }); */
+
+ /********* Helpful Functions ***************
+ ********************************************/ 
+
 
 function bookExists(isbn) {
     sqlSelect = "Select isbn FROM books where isbn = ?";
