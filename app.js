@@ -47,6 +47,7 @@ app.get("/bookManager", function (req, res) {
 
 });
 
+//api call for adding updating books
 app.post("/bookManager", function (req, res) {
     console.log("This is Body: ", req.body);
 
@@ -66,8 +67,6 @@ app.post("/bookManager", function (req, res) {
         sqlAuthors = "INSERT INTO authors (books_id, auth_name) VALUES (?, ?)";
         sqlInventory = "INSERT INTO inventory (books_id, stock) VALUES (?, ?)";
         bookId = null;
-        /*  sqlInsert = "INSERT INTO books AS b, descriptors AS d, authors AS a, inventory AS i (b.isbn, b.imageUrl," 
-             + " b.title, d.genre, a.auth_name, i.stock)  VALUES (?,?,?,?,?,?)"; */
 
         pool.query(sqlBooks, [req.body.ISBN, req.body.imageURI, req.body.title], function (err, rows, fields) {
             if (err) throw err;
@@ -105,8 +104,7 @@ app.post("/bookDelete", function (req, res) {
 /* app.listen(port, ip,
     function () {
         console.log("Express server is running");
-    }); */
-
+       }); */
 app.listen(process.env.PORT, process.env.IP,
     function () {
         console.log("Express server is running");
@@ -116,7 +114,7 @@ app.listen(process.env.PORT, process.env.IP,
  /********* Helpful Functions ***************
  ********************************************/ 
 
-
+//if book exists already returns true (checks the books table)
 function bookExists(isbn) {
     sqlSelect = "Select isbn FROM books where isbn = ?";
     sqlSelectParams = [isbn];
