@@ -2,6 +2,57 @@
 <br>
 <div class="container">
     <br>
+    <% 
+if(bookAdded) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Book Added Successfully!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <% }
+    if(bookUpdated) {%>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Book Added Successfully!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <% }
+    if(bookDeleted) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Book Deleted Successfully!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <% }
+    if(login) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        You have been logged in!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <%}
+    if (error) {%>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        There was an error with your request.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <% } 
+    if (noRecords) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        There was no records found with that ISBN number
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <% } %>
+    <br>
     <div class="row justify-content-md-center">
         <h2>Book Manager:</h2>
     </div>
@@ -10,7 +61,7 @@
     </div>
     <div class="row justify-content-md-center">
         <div class="col col-md-6">
-            <form action="javascript:void(0)">
+            <form action="/bookUpdate" method="POST">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="title">Title:</label>
@@ -18,13 +69,15 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="author">Author:</label>
-                        <input type="text" class="form-control" id="author" name="author" placeholder="George Orwell" required>
+                        <input type="text" class="form-control" id="author" name="author" placeholder="George Orwell"
+                            required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col">
                         <label for="ISBN">ISBN: </label>
-                        <input type="text" class="form-control" id="ISBN" name="ISBN" placeholder="9780451524935" required>
+                        <input type="text" class="form-control" id="ISBN" name="ISBN" placeholder="9780451524935"
+                            required>
                     </div>
                     <div class="form-group col">
                         <label for="genre">Genre:</label>
@@ -51,7 +104,7 @@
 
                     </div>
                 </div>
-                
+
             </form>
         </div>
     </div>
@@ -66,7 +119,8 @@
                 <div class="form-row">
                     <div class="form-group col">
                         <label for="ISBN2">ISBN: </label>
-                        <input type="text" class="form-control" id="ISBN2" name="ISBN2" placeholder="9780451524935" required>
+                        <input type="text" class="form-control" id="ISBN2" name="ISBN2" placeholder="9780451524935"
+                            required>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Delete Book</button>

@@ -3,6 +3,8 @@ const app = express();
 const request = require("request");
 const pool = require("./dbPool.js");
 const session = require('express-session');
+const { response } = require("express");
+const util = require('util');
 
 
 //express setup & middleware
@@ -13,7 +15,7 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(session({
-    secret: 'nvurw23g24vn23',
+    secret: 'uniqueSessionKeys',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }
@@ -26,14 +28,38 @@ const ip = process.env.IP || "127.0.0.1";
 
 //default route
 app.get("/", function (req, res) {
-    res.render("index");
+    console.log(req.session.isAdmin);
+    res.render("index", { isAdmin: req.session.isAdmin });
 });
 
 
 /**************   Login routes *****************
  * ********************************************/
 app.get("/login", function (req, res) {
-    res.render("login")
+    res.render("login", { isAdmin: req.session.isAdmin })
+    
+});
+
+app.post("/logout", function (req, res) {
+    req.session.destroy(function(err){
+        if(err)throw err;
+        res.render("index", { isAdmin: false });
+    })
+})
+
+app.post("/login", function (req, res) {
+
+    loginSql = "select * from admins where adm_email = ? and adm_pword = ?"
+    pool.query(loginSql, [req.body.email, req.body.password], function (err, rows, fields) {
+        if (err) {
+            
+            throw err;
+        }
+        req.session.isAdmin = true;
+        console.log(req.session.isAdmin)
+        res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: true, isAdmin: req.session.isAdmin });
+
+    });
 });
 
 
@@ -43,89 +69,112 @@ app.get("/login", function (req, res) {
 
 app.get("/bookManager", function (req, res) {
     //console.log(req);
-    res.render("bookManager");
+    res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: false, isAdmin: req.session.isAdmin });
 
 });
 
 //api call for adding updating books
-app.post("/bookManager", function (req, res) {
-    console.log("This is Body: ", req.body);
 
-    if (bookExists(req.body.ISBN)) {
-        sqlUpdate = "UPDATE books b, descriptors d, authors a, inventory i"
-            + "SET b.isbn = ?, b.imageUrl = ?, b.title = ?, d.genre = ?, a.auth_name = ?, i.stock = i";
-        sqlUpdateParams = [req.body.ISBN, req.body.imageURI, req.body.title, req.body.genre, req.body.author, req.body.stock];
 
-        pool.query(sqlUpdate, sqlUpdateParams, function (err, rows, fields) {
-            if (err) throw err;
-            console.log(rows);
-            res.send("200");
-        });
-    } else {
-        sqlBooks = "INSERT INTO books (isbn, imageUrl, title) VALUES (?,?,?)";
-        sqlDescriptors = "INSERT INTO descriptors (books_id, genre) VALUES (?,?)";
-        sqlAuthors = "INSERT INTO authors (books_id, auth_name) VALUES (?, ?)";
-        sqlInventory = "INSERT INTO inventory (books_id, stock) VALUES (?, ?)";
-        bookId = null;
+app.post("/bookUpdate", function (req, res) {
 
-        pool.query(sqlBooks, [req.body.ISBN, req.body.imageURI, req.body.title], function (err, rows, fields) {
-            if (err) throw err;
-            console.log(rows.insertId);
-            bookId = rows.insertId;
+    sqlSelect = "Select isbn FROM books where isbn = ?";
+    sqlSelectParams = [req.body.ISBN];
+    pool.query(sqlSelect, sqlSelectParams, function (err, rows, fields) {
 
-            pool.query(sqlDescriptors, [bookId, req.body.genre], function (err, rows, fields) {
-                if (err) throw err;
-                console.log(rows);
 
-                pool.query(sqlAuthors, [bookId, req.body.author], function (err, rows, fields) {
-                    if (err) throw err;
-                    console.log(rows);
+        if (rows.length >= 1) {
+            console.log("entering the update function");
+            sqlUpdate = "UPDATE books b, descriptors d, authors a "
+                + "SET b.isbn = ?, b.imageUrl = ?, b.title = ?, d.genre = ?, a.auth_name = ?, b.stock = ? WHERE b.isbn = ?";
+            sqlUpdateParams = [req.body.ISBN, req.body.imageURI, req.body.title, req.body.genre, req.body.author, req.body.stock, req.body.ISBN];
 
-                    pool.query(sqlInventory, [bookId, req.body.stock], function (err, rows, fields) {
-                        if (err) throw err;
-                        console.log(rows);
+            pool.query(sqlUpdate, sqlUpdateParams, function (err, rows, fields) {
+                if (err) {
+                    //res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true });
+                    throw err;
+                }
+                //console.log(rows);
+                res.render("bookManager", { bookUpdated: true, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: false, isAdmin: req.session.isAdmin });
+            })
+
+        }
+        else {
+            console.log("entering the insert side");
+            sqlBooks = "INSERT INTO books (isbn, imageUrl, title, stock) VALUES (?,?,?,?)";
+            sqlDescriptors = "INSERT INTO descriptors (books_id, genre) VALUES (?,?)";
+            sqlAuthors = "INSERT INTO authors (books_id, auth_name) VALUES (?, ?)";
+            bookId = null;
+
+            pool.query(sqlBooks, [req.body.ISBN, req.body.imageURI, req.body.title, req.body.stock], function (err, rows, fields) {
+                if (err) {
+                    res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true, noRecords: false, login: false, isAdmin: req.session.isAdmin });
+                    throw err;
+                }
+                //console.log(rows.insertId);
+                bookId = rows.insertId;
+
+                pool.query(sqlDescriptors, [bookId, req.body.genre], function (err, rows, fields) {
+                    if (err) {
+                        res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true, noRecords: false, login: false, isAdmin: req.session.isAdmin });
+                        throw err;
+                    }
+                    // console.log(rows);
+
+                    pool.query(sqlAuthors, [bookId, req.body.author], function (err, rows, fields) {
+                        if (err) {
+                            res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true, noRecords: false, login: false, isAdmin: req.session.isAdmin });
+                            throw err;
+                        }
+                        // console.log(rows);
+                        res.render("bookManager", { bookUpdated: false, bookAdded: true, bookDeleted: false, error: false, noRecords: false, login: false, isAdmin: req.session.isAdmin });
+
                     });
-                });
+
+                })
+
             });
 
-        });
-        res.send("200");
-    }
+        }
+
+    });
+
 });
 
+
 app.post("/bookDelete", function (req, res) {
-    console.log("This is Body: ", req.body);
-    res.render("bookManager");
+    sql = "DELETE FROM books where isbn = ?";
+    var recordsFound = true;
+    pool.query(sql, [req.body.ISBN2], function (err, rows, fields) {
+        if (err) {
+            res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true, noRecords: false, login: false, isAdmin: req.session.isAdmin });
+            throw err;
+        }
+        console.log(rows);
+        if (rows.affectedRows >= 1) {
+            recordsFound = false;
+            res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: true, error: false, noRecords: recordsFound, login: false, isAdmin: req.session.isAdmin });
+        } else {
+            res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: false, noRecords: recordsFound, login: false, isAdmin: req.session.isAdmin });
+        }
+
+    })
+
 })
 
 
 //Starting the web server
 //NOte can't put in other info or heroku won't work
-/* app.listen(port, ip,
-    function () {
-        console.log("Express server is running");
-       }); */
-app.listen(process.env.PORT, process.env.IP,
+app.listen(port, ip,
     function () {
         console.log("Express server is running");
     });
+/* app.listen(process.env.PORT, process.env.IP,
+    function () {
+        console.log("Express server is running");
+    }); */
 
 
- /********* Helpful Functions ***************
- ********************************************/ 
-
-//if book exists already returns true (checks the books table)
-function bookExists(isbn) {
-    sqlSelect = "Select isbn FROM books where isbn = ?";
-    sqlSelectParams = [isbn];
-
-    pool.query(sqlSelect, sqlSelectParams, function (err, rows, fields) {
-        if (err) throw err;
-        console.log(rows);
-        if (rows >= 1) {
-            return true;
-        }
-        return false;
-    });
-};
+/********* Helpful Functions ***************
+********************************************/
 

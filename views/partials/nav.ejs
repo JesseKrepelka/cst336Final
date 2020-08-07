@@ -11,6 +11,8 @@
         <li class="nav-item">
           <a class="nav-link" href="/login">Login</a>
         </li>
+        <%
+        if(isAdmin){ %> 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Admin-Menu
@@ -20,11 +22,20 @@
             <a class="dropdown-item" href="#">Manage Admins</a>
           </div>
         </li>
+        <% } %>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+      <% if(isAdmin) { %>
+        <form action="/logout" method="POST" class="form-inline my-2 my-lg-0">
+        <button class="btn btn-success my-2 my-sm-0" type="submit">Logout</button>
       </form>
+      <% } else { %>
+        <form action="/login" method="POST" class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="email" name="email" placeholder="Email" aria-label="Email" required>
+          <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password" aria-label="Password" required>
+          <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+        </form>
+      <% } %>
+      
     </div>
   </nav>
 
