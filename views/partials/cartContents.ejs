@@ -1,0 +1,23 @@
+<% cartArray.forEach(function(RowDataPacket, i){ %>
+    <div class = "row align-items-center">
+        <div class = "col-sm">
+            <img src="<%= RowDataPacket.imageUrl %>"/>
+        </div>
+        <div class = "col-sm">
+            "<%= RowDataPacket.title %>"
+        </div>
+        <div class = "col-sm book-price">
+            $<%= RowDataPacket.price %>
+            <%totalPrice += RowDataPacket.price%>
+        </div>
+        <div class = "col-sm">
+            <input class="cart-quantity" type="number" value= 1>
+        </div>
+        <div class = "col-sm">
+            <button class="btn btn-primary remove-from-cart-btn"> REMOVE FROM CART </button>
+        </div>
+    </div>
+    <br>
+<% }); %>
+
+<div>totalPrice: $<%= totalPrice%></div>

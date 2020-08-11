@@ -163,6 +163,38 @@ app.post("/bookDelete", function (req, res) {
 })
 
 
+/**************  Cart Routes *****************
+ ********************************************/
+
+app.get("/cart", function (req, res) {
+    //console.log(cartArray)
+    res.render("cart", { isAdmin: req.session.isAdmin})
+});
+
+app.get("/cartContents", async function (req, res) {
+    let cartArray = await fillCart(req.query.cart);
+    var totalPrice = 0;
+    res.render("partials/cartContents", {isAdmin: req.session.isAdmin, "cartArray": cartArray, "totalPrice" : totalPrice});
+});
+
+function fillCart(cartIds){
+    return new Promise(function(resolve, reject){
+        let sql = "SELECT * FROM books WHERE id in (?)";
+        let sqlSelectParams = [cartIds];//took like a half hour to realize this needed to be in brackets
+        let cArray = [];
+        console.log(sqlSelectParams);
+        pool.query(sql, sqlSelectParams, function(err, rows, fields) {
+            if (err) reject(err);
+            console.log(rows);
+            for (var i of rows){
+                cArray.push(i);
+            }
+            resolve(cArray);
+        });
+    });
+}
+
+
 //Starting the web server
 //NOte can't put in other info or heroku won't work
 /* app.listen(port, ip,
