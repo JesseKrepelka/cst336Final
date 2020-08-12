@@ -175,7 +175,7 @@ app.get("/removeFromCart", function(req,res){
             throw err;
         }
     });
-    res.redirect("/shoppingCart" , {isAdmin: req.session.isAdmin});
+    res.redirect("/shoppingCart");
 });
 
 app.post("/buyCart", function(req,res){
