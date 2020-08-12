@@ -9,11 +9,152 @@ use the classes below for contrasting colors and keeping the site looking the sa
 
 
 .darkPrimary {
-    background-color: #0097A7;
+    /*background-color: #0097A7;*/
+    /*background-color: #00adb5;*/
+    background-color: #033;
     color: #FFFFFF;
 }
 
 .lightPrimary {
     background-color: #B2EBF2;
     color: #FFFFFF;
+}
+html,body{
+    height: 100%;
+}
+body{ 
+    display:flex; 
+    flex-direction:column;
+    overflow-x: hidden;
+    /*background-color: #393e46;*/
+    background-color: whitesmoke;
+  }
+  
+  footer{
+    margin-top:auto;
+  }
+hr{
+    border-top: 2px solid rgb(255, 255, 255);
+}
+.display-5{
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+    font-weight: 700;
+    text-shadow: 2px 2px 5px black;
+    text-align: center;
+margin-bottom: 2.5rem;
+margin-top: 2rem;
+}
+#carouselExampleIndicators{
+    margin: auto;
+    max-width: 800px;
+}
+.jumbotron{
+    /*background-color: #222831 !important;*/
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    box-shadow: 2px 3px 8px black;
+    background-color: #000000;
+    /*background-image: linear-gradient(315deg, #272121 0%, #222831 74%);*/
+    background-image: linear-gradient(315deg, #0e0c0c 0%, #222831 74%);
+    border-radius: 15px;
+}
+
+.btn-grad {
+    /*
+    border-color: #00adb5;
+    background-color: #00adb5;
+    text-shadow: 1px 2px 2px black;
+    */
+    letter-spacing: 0.6px;
+    background-color: whitesmoke;
+    color: black;
+    border-color: black;
+}
+.btn-grad:hover {
+    box-shadow: 4px 5px 6px black;
+    /*
+    background-color: whitesmoke;
+    color: black;
+    border-color: black;
+    */
+    background-color: black;
+    color: whitesmoke;
+    border-color: black;
+    background-color: #01662e;
+}
+
+.carousel-caption{
+    right: 0%;
+    left: 0%;
+    background-color: rgba(0, 0, 0, 0.5);
+    bottom: 0;
+    padding-bottom: 40px;
+}
+footer{
+    text-align: center;
+    font-size: 1.5rem;
+    text-shadow: 2px 1px 1px black;
+    padding: 1rem 0;
+}
+.navbar-brand{
+    text-shadow: 1px 1px 1px black;
+    font-size: 1.5rem;
+}
+.display-4{
+    font-weight: 400;
+    text-shadow: 2px 6px 4px black;
+}
+img.d-block{
+    max-width: 300px !important;
+    position: relative;
+    margin: auto;
+}
+.modal-footer{
+    justify-content: center;
+}
+.modal-body .col-md-4{
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+.modal-body img{
+    height: 250px !important;
+}
+.btn-green{
+    color: whitesmoke;
+    border-color: black;
+    background-color: #01662e;
+}
+.modal-body .btn-grad:hover{
+    box-shadow: 2px 3px 3px black;
+}
+.modal-body i{
+    padding-right: 5px;
+}
+.modal-flex{
+    display: flex;
+justify-content: center;
+align-items: flex-end;
+}
+td img{
+    max-height: 100px;
+}
+table td, table th{
+    vertical-align: middle !important;
+}
+.fa-credit-card, .fa-shopping-cart{
+    padding-right: 10px;
+}
+.btn-green2{
+    color: whitesmoke;
+    border-color: black;
+    background-color: #01662e;
+}
+.pt3{
+    padding-top: 3rem !important;
+}
+.btn a{
+    color: white;
 }

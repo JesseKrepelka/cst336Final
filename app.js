@@ -29,7 +29,75 @@ const ip = process.env.IP || "127.0.0.1";
 //default route
 app.get("/", function (req, res) {
     console.log(req.session.isAdmin);
-    res.render("index", { isAdmin: req.session.isAdmin });
+    let sql = "SELECT * FROM books LEFT JOIN authors ON books.id = authors.books_id ORDER BY id";
+    var randNumbers = new Array();
+    for(let i=0; i<3; ){
+        let number = Math.floor((Math.random()*20)+1);
+        if (!randNumbers.includes(number)){
+            randNumbers[i] = number;
+            i++;
+            console.log("Number inserted: " + number);
+        }
+    }
+    
+    pool.query(sql, function(err, rows, fields) {
+        if (err) throw err;
+        //console.log(rows);
+        //res.redirect("/getMovies");
+        res.render("index", { isAdmin: req.session.isAdmin, "bookInfo":rows, "numbers":randNumbers, "success":0 });
+    });
+});
+
+app.get("/shoppingCart", function (req, res) {
+    console.log(req.session.isAdmin);
+    let sql = "SELECT * FROM shopping_cart LEFT JOIN authors ON shopping_cart.bookID = authors.books_id LEFT JOIN books ON shopping_cart.bookID = books.id ";
+    
+    pool.query(sql, function(err, rows, fields) {
+        if (err) throw err;
+        res.render("cart", { isAdmin: req.session.isAdmin, "books":rows });
+    });
+});
+
+app.get("/addToCartSuccess", function (req, res) {
+    console.log(req.session.isAdmin);
+    let sql = "SELECT * FROM books LEFT JOIN authors ON books.id = authors.books_id ORDER BY id";
+    var randNumbers = new Array();
+    for(let i=0; i<3; ){
+        let number = Math.floor((Math.random()*20)+1);
+        if (!randNumbers.includes(number)){
+            randNumbers[i] = number;
+            i++;
+            console.log("Number inserted: " + number);
+        }
+    }
+    
+    pool.query(sql, function(err, rows, fields) {
+        if (err) throw err;
+        //console.log(rows);
+        //res.redirect("/getMovies");
+        res.render("index", { isAdmin: req.session.isAdmin, "bookInfo":rows, "numbers":randNumbers, "success":1 });
+    });
+});
+
+app.get("/buyCartSuccess", function (req, res) {
+    console.log(req.session.isAdmin);
+    let sql = "SELECT * FROM books LEFT JOIN authors ON books.id = authors.books_id ORDER BY id";
+    var randNumbers = new Array();
+    for(let i=0; i<3; ){
+        let number = Math.floor((Math.random()*20)+1);
+        if (!randNumbers.includes(number)){
+            randNumbers[i] = number;
+            i++;
+            console.log("Number inserted: " + number);
+        }
+    }
+    
+    pool.query(sql, function(err, rows, fields) {
+        if (err) throw err;
+        //console.log(rows);
+        //res.redirect("/getMovies");
+        res.render("index", { isAdmin: req.session.isAdmin, "bookInfo":rows, "numbers":randNumbers, "success":2 });
+    });
 });
 
 
@@ -75,6 +143,49 @@ app.get("/bookManager", function (req, res) {
 
 //api call for adding updating books
 
+app.post("/addToCart", function(req, res){
+    /*
+    sqlSelect = "SELECT imageUrl, title, price, auth_name FROM books LEFT JOIN authors ON books.id = authors.books_id ORDER BY id";
+    sqlParam = [req.body.id];
+    */
+    sqlSelect = "SELECT bookID  FROM shopping_cart WHERE bookID = ?";
+    sqlSelectParams = [req.body.id];
+    pool.query(sqlSelect, sqlSelectParams, function (err, rows, fields) {
+        if (!rows.length >= 1){
+            sqlInsert = "INSERT INTO shopping_cart (bookID) VALUES (?)";
+            sqlInsertParams = [req.body.id];
+            pool.query(sqlInsert, sqlInsertParams, function (err, rows, fields){
+                if (err) {
+                    throw err;
+                }
+            });
+            
+        }
+    });
+    console.log("Success!");
+    res.send({redirect: '/addToCartSuccess'});
+});
+
+app.get("/removeFromCart", function(req,res){
+    sqlDelete = "DELETE FROM shopping_cart WHERE bookID = ?";
+    sqlDeleteParams = [req.query.id];
+    pool.query(sqlDelete, sqlDeleteParams, function (err, rows, fields){
+        if (err) {
+            throw err;
+        }
+    });
+    res.redirect("/shoppingCart");
+});
+
+app.post("/buyCart", function(req,res){
+    sqlDelete = "DELETE FROM shopping_cart WHERE id=1";
+    pool.query(sqlDelete, function (err, rows, fields){
+        if (err) {
+            throw err;
+        }
+    });
+    res.send({redirect: '/buyCartSuccess'});
+});
 
 app.post("/bookUpdate", function (req, res) {
 
@@ -160,39 +271,8 @@ app.post("/bookDelete", function (req, res) {
 
     })
 
-})
-
-
-/**************  Cart Routes *****************
- ********************************************/
-
-app.get("/cart", function (req, res) {
-    //console.log(cartArray)
-    res.render("cart", { isAdmin: req.session.isAdmin})
 });
 
-app.get("/cartContents", async function (req, res) {
-    let cartArray = await fillCart(req.query.cart);
-    var totalPrice = 0;
-    res.render("partials/cartContents", {isAdmin: req.session.isAdmin, "cartArray": cartArray, "totalPrice" : totalPrice});
-});
-
-function fillCart(cartIds){
-    return new Promise(function(resolve, reject){
-        let sql = "SELECT * FROM books WHERE id in (?)";
-        let sqlSelectParams = [cartIds];//took like a half hour to realize this needed to be in brackets
-        let cArray = [];
-        console.log(sqlSelectParams);
-        pool.query(sql, sqlSelectParams, function(err, rows, fields) {
-            if (err) reject(err);
-            console.log(rows);
-            for (var i of rows){
-                cArray.push(i);
-            }
-            resolve(cArray);
-        });
-    });
-}
 
 
 //Starting the web server
@@ -201,12 +281,17 @@ function fillCart(cartIds){
     function () {
         console.log("Express server is running");
     }); */
+    
 app.listen(process.env.PORT, process.env.IP,
     function () {
         console.log("Express server is running");
     });
 
-
+/*
+app.listen(3000,function(){
+    console.log("Express server is running");
+});
+*/
 /********* Helpful Functions ***************
 ********************************************/
 
