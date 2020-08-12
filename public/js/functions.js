@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     $("#btnUpdateBook").click(function () {
         updateBook();
     });
@@ -18,60 +19,66 @@ $(document).ready(function () {
                 stock: $("#stock").val()
             },
             success: function (result, status) {
-                console.log(result.status);
+                console.log(result.status)
             }
         });
         
     }
-    
-    function loadCart(){
-        var passCart = JSON.parse(localStorage.getItem("cart"));
+
+    $(".addToCart").click(function(){
+        //let id = this.querySelectorAll('.bookID');
+        let id = $(this).siblings(".bookID").val();
+        console.log(id);
+        console.log('Add to Cart clicked on Book ID ' + id);
+        
         $.ajax({
-           method: "GET",
-           url: "/cartContents",
-           data: {
-               cart: passCart
-           },
-           success: function (result, status){
-               $("#cart").html(result);
-           }
-        });
-    }
-    loadCart();
-    
-    $(".btnAddToCart").click(function(e){
-        console.log(e.target.id);
-        addToCart(e.target.id);
-        console.log(localStorage.cartSize);
-    });
-    
-    function addToCart(idToAdd){
-        var tempCart = [];
-        if(typeof(Storage) !== "undefined"){
-            if(localStorage.cartSize){
-                if(localStorage.cart){
-                    tempCart = JSON.parse(localStorage.getItem("cart"));
-                    tempCart[localStorage.cartSize] = idToAdd;
-                    localStorage.cartSize = Number(localStorage.cartSize)+1;
-                    localStorage.setItem("cart", JSON.stringify(tempCart));
-                    console.log("item added");
-                }
-            } else {
-                tempCart[0] = idToAdd;
-                localStorage.setItem("cartSize", 1);
-                localStorage.setItem("cart", JSON.stringify(tempCart));
-                console.log("cart created");
+            method: "POST",
+            url: "/addToCart",
+            dataType: "json",
+            data: {
+                id: $(this).siblings(".bookID").val()
+            },
+            success: function (result, status, jqXHR) {
+                if (typeof result.redirect == 'string')
+                    window.location = result.redirect;
             }
-        }
-    }
-    
-    /*
-    $("#btnRemoveFromCart").click (function(){
-        removeFromCart();
-    });
-    
-    function removeFromCart(){
+        });
         
+    });
+
+    $("#buyCart").click(function(){
+        $.ajax({
+            method: "POST",
+            url: "/buyCart",
+            dataType: "json",
+            data: {
+                id: $(this).siblings(".bookID").val()
+            },
+            success: function (result, status, jqXHR) {
+                if (typeof result.redirect == 'string')
+                    window.location = result.redirect;
+            }
+        });
+    });
+
+    if(flagSuccess == 1){
+
+          Swal.fire({
+            title: 'Success!',
+            text: 'Object Added to Shopping Cart',
+            icon: 'success',
+            confirmButtonText: 'Ok'
+          })
     }
-    */
+
+    if(flagSuccess == 2){
+
+        Swal.fire({
+          title: 'Success!',
+          text: 'Thank you for your purchase.',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        })
+  }
+
 });
