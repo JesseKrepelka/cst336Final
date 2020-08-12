@@ -158,3 +158,8 @@ table td, table th{
 .btn a{
     color: white;
 }
+
+.table-borderless-2 td,
+.table-borderless-2 th {
+    border: 0;
+}

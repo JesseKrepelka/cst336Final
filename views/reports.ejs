@@ -1,5 +1,88 @@
 <%- include('partials/header.ejs') %>
 
-<hr>
+<body>
+    <div class="container">
+        <br>
+        <div class="card bg-dark text-white">
+            <div class="card-body">
+                <table class = "table table-borderless-2" name="inventory-table">
+                    <h3>Inventory On Hand</h1>
+                    <% let rowTotal = 0; %>
+                    <% let total = 0; %>
+                    <% let items = 0%>
+                    <% inventory.forEach(function(RowDataPacket, i){ %>
+                        <% rowTotal = RowDataPacket.price * RowDataPacket.stock; %>
+                        <% total += rowTotal; %>
+                        <% items += RowDataPacket.stock;%>
+                    <% });%>
+                    <tbody>
+                        <tr>
+                            <td> Number of Items </td>
+                            <td> <%= items%></td>
+                        </tr>
+                        <tr>
+                            <td> Average Item Cost</td>
+                            <td> <%= (total/items).toFixed(2)%></td>
+                        </tr>
+                        <tr>
+                            <td> Total Inventory Value</td>
+                            <td> <%= (total).toFixed(2)%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <div class="card bg-dark text-white">
+            <div class="card-body">
+                <table class = "table table-borderless-2" name="low-stock-table">
+                    <h3>Low Stock</h1>
+                    <thead>
+                        <tr>
+                            <th scope="col">ISBN</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Remaining Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% inventory.forEach(function(RowDataPacket, i){ %>
+                        <% if(RowDataPacket.stock < 10){ %>
+                            <tr>
+                                <td> <%= RowDataPacket.isbn %> </td>
+                                <td> <%= RowDataPacket.title %> </td>
+                                <td> <%= RowDataPacket.stock %></td>
+                            </tr>
+                        <% } %>
+                    <% });%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <div class="card bg-dark text-white">
+            <div class="card-body">
+                <table class = "table table-borderless-2" name="low-stock-table">
+                    <h3>Store Stats</h1>
+                    <%let lengthTotal = 0;%>
+                    <%let numOfBooks = 0;%>
+                    <% descriptors.forEach(function(RowDataPacket, i){ %>
+                        <% lengthTotal += RowDataPacket.length %> 
+                        <% numOfBooks += 1 %>
+                    <% });%>
+                    <tbody>
+                        <tr>
+                            <td>Avg book length</td>
+                            <td><%= (lengthTotal/numOfBooks).toFixed(0) %></td>
+                        </tr>
+                        <tr>
+                            <td>Most Popular Genre</td>
+                            <td>N/A</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
 
 <%- include('partials/footer.ejs') %>

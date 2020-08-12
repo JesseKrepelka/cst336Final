@@ -36,7 +36,7 @@ app.get("/", function (req, res) {
         if (!randNumbers.includes(number)){
             randNumbers[i] = number;
             i++;
-            console.log("Number inserted: " + number);
+            //console.log("Number inserted: " + number);
         }
     }
     
@@ -105,28 +105,24 @@ app.get("/buyCartSuccess", function (req, res) {
  * ********************************************/
 app.get("/login", function (req, res) {
     res.render("login", { isAdmin: req.session.isAdmin })
-    
 });
 
 app.post("/logout", function (req, res) {
     req.session.destroy(function(err){
         if(err)throw err;
-        res.render("index", { isAdmin: false });
+        res.redirect("/");
     })
 })
 
 app.post("/login", function (req, res) {
-
     loginSql = "select * from admins where adm_email = ? and adm_pword = ?"
     pool.query(loginSql, [req.body.email, req.body.password], function (err, rows, fields) {
         if (err) {
-            
             throw err;
         }
         req.session.isAdmin = true;
         console.log(req.session.isAdmin)
         res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: true, isAdmin: req.session.isAdmin });
-
     });
 });
 
@@ -134,14 +130,19 @@ app.post("/login", function (req, res) {
 
 /**************  Admin Routes *****************
  ********************************************/
+app.get("/reports", async function(req, res){
+    let inv = await getBooks();
+    let auth = await getAuthors();
+    let desc = await getDescriptors();
+    res.render("reports", {"inventory":inv, "authors":auth, "descriptors":desc, isAdmin:req.session.isAdmin});
+});
+ 
 
 app.get("/bookManager", function (req, res) {
     //console.log(req);
     res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: false, isAdmin: req.session.isAdmin });
-
 });
 
-//api call for adding updating books
 
 app.post("/addToCart", function(req, res){
     /*
@@ -163,7 +164,7 @@ app.post("/addToCart", function(req, res){
         }
     });
     console.log("Success!");
-    res.send({redirect: '/addToCartSuccess'});
+    res.send({redirect: '/addToCartSuccess', isAdmin: req.session.isAdmin});
 });
 
 app.get("/removeFromCart", function(req,res){
@@ -174,7 +175,7 @@ app.get("/removeFromCart", function(req,res){
             throw err;
         }
     });
-    res.redirect("/shoppingCart");
+    res.redirect("/shoppingCart" , {isAdmin: req.session.isAdmin});
 });
 
 app.post("/buyCart", function(req,res){
@@ -184,7 +185,7 @@ app.post("/buyCart", function(req,res){
             throw err;
         }
     });
-    res.send({redirect: '/buyCartSuccess'});
+    res.send({redirect: '/buyCartSuccess' , isAdmin: req.session.isAdmin});
 });
 
 app.post("/bookUpdate", function (req, res) {
@@ -294,4 +295,44 @@ app.listen(3000,function(){
 */
 /********* Helpful Functions ***************
 ********************************************/
+function getBooks (){
+    return new Promise(function(resolve, reject) {
+        let sql = "SELECT * FROM books";
+        let table = [];
+        pool.query(sql, function(err, rows, fields) {
+            if (err) reject(err);
+            for (var i of rows){
+                table.push(i);
+            }
+            resolve(table);
+        });
+    });
+}
 
+function getAuthors (){
+    return new Promise(function(resolve, reject) {
+        let sql = "SELECT * FROM authors";
+        let table = [];
+        pool.query(sql, function(err, rows, fields) {
+            if (err) reject(err);
+            for (var i of rows){
+                table.push(i);
+            }
+            resolve(table);
+        });
+    });
+}
+
+function getDescriptors (){
+    return new Promise(function(resolve, reject) {
+        let sql = "SELECT * FROM descriptors";
+        let table = [];
+        pool.query(sql, function(err, rows, fields) {
+            if (err) reject(err);
+            for (var i of rows){
+                table.push(i);
+            }
+            resolve(table);
+        });
+    });
+}
