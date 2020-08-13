@@ -124,9 +124,11 @@ app.get("/searchBook", function(req, res) {
 
 /**************   Login routes *****************
  * ********************************************/
+
 app.get("/login", function (req, res) {
     res.render("login", { isAdmin: req.session.isAdmin })
 });
+
 
 app.post("/logout", function (req, res) {
     req.session.destroy(function(err){
@@ -136,14 +138,19 @@ app.post("/logout", function (req, res) {
 })
 
 app.post("/login", function (req, res) {
-    loginSql = "select * from admins where adm_email = ? and adm_pword = ?"
+    let loginbool = false;
+    let loginSql = "SELECT * FROM admins WHERE adm_email = ? and adm_pword = ?"
     pool.query(loginSql, [req.body.email, req.body.password], function (err, rows, fields) {
         if (err) {
             throw err;
         }
-        req.session.isAdmin = true;
-        console.log(req.session.isAdmin)
-        res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: true, isAdmin: req.session.isAdmin });
+        console.log(rows.length);
+        if(rows.length != 0){
+            req.session.isAdmin = true;
+            let loginbool = true;
+        }
+        console.log(req.session.isAdmin);
+        res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: loginbool, isAdmin: req.session.isAdmin });
     });
 });
 
