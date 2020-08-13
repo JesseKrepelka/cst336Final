@@ -1,22 +1,4 @@
 <%- include('partials/header.ejs') %>
-<% if(success != undefined && success == 1){
-%>
-
-<script>
-  let flagSuccess = 1;
-</script>
-
-<%
-} %>
-<% if(success != undefined && success == 2){
-  %>
-  
-  <script>
-    let flagSuccess = 2;
-  </script>
-  
-  <%
-  } %>
 <!-- Default form contact -->
 
 <form class="text-center border border-light p-5 mainForm" action="/searchBook" method="GET">
