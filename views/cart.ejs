@@ -1,0 +1,46 @@
+<%- include('partials/header.ejs') %>
+
+<div class="container">
+    <div class="jumbotron primary">
+        <h1 class="display-4"><i class="fas fa-shopping-cart"></i>Shopping Cart</h1>
+        <hr class="my-4">
+        <table class="table table-hover ">
+            <thead>
+                <tr>
+                    <th scope="col">Book ID</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Price</th>
+                    <th class="text-center" scope="col">Remove From Cart</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                let total = 0;
+                books.forEach(function(row,i){ 
+                    total = total + row['price'];
+                %>
+                <tr>
+                    <th class="text-center" scope="row"><%= row['bookID'] %></th>
+                    <td><img src="<%= row['imageUrl'] %>"></td>
+                    <td><%= row['title'] %></td>
+                    <td><%= row['auth_name'] %></td>
+                    <td>$ <%= row['price'] %></td>
+                    <td class="text-center"><button class="btn btn-danger"><a href="removeFromCart?id=<%= row['bookID'] %>"><i class="fas fa-trash-alt"></i></button></a></button></td>
+                </tr>
+                <% }); %>
+                <tr>
+                    <th class="text-center pt3" scope="row">TOTAL</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="pt3">$ <%= total %></td>
+                    <td class="text-center pt3" id="buyCart"><button class="btn btn-success btn-green2"><i class="far fa-credit-card"></i>Buy Items</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+  </div>
+
+<%- include('partials/footer.ejs') %>

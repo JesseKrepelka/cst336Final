@@ -8,8 +8,14 @@
         <li class="nav-item active">
           <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         </li>
+        <%
+        if(!isAdmin){ %> 
         <li class="nav-item">
           <a class="nav-link" href="/login">Login</a>
+        </li>
+        <% }%>
+        <li class="nav-item">
+          <a class="nav-link" href="/shoppingCart">Shopping Cart</a>
         </li>
         <%
         if(isAdmin){ %> 
@@ -19,7 +25,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/bookManager">Manage Books</a>
-            <a class="dropdown-item" href="#">Manage Admins</a>
+            <a class="dropdown-item" href="/reports">Reports</a>
           </div>
         </li>
         <% } %>
@@ -35,7 +41,6 @@
           <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
         </form>
       <% } %>
-      
     </div>
   </nav>
 
