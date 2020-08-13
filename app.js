@@ -5,22 +5,23 @@ const pool = require("./dbPool.js");
 const session = require('express-session');
 const { response } = require("express");
 const util = require('util');
-
+const bodyParser = require('body-parser');
 
 //express setup & middleware
 app.set("view engine", "ejs");
+app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
+
 app.use(session({
     secret: 'uniqueSessionKeys',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }
 }));
-
 
 //declares the port and IP for localhost and global
 const port = process.env.PORT || 8080;
@@ -31,6 +32,26 @@ app.get("/", function (req, res) {
     console.log(req.session.isAdmin);
     res.render("index", { isAdmin: req.session.isAdmin });
 });
+
+app.get('/search', function(req,res) { 
+    res.render("search", { isAdmin: false });
+})
+
+app.get("/searchBook", function(req, res) { 
+    let title = req.query.title; 
+    let author = req.query.author;
+    let genre = req.query.genre;
+    let isbn = req.query.isbn;
+    if (title || author || genre || isbn) {
+        let sql = "SELECT b.title, b.isbn, a.auth_name, d.genre FROM books AS b INNER JOIN descriptors AS d ON b.id = d.books_id  INNER JOIN authors AS a ON b.id = a.books_id WHERE title = ? OR auth_name = ? OR genre = ? OR isbn = ?";
+        let sqlParams = [req.query.title, req.query.author, req.query.genre, req.query.isbn]
+        pool.query(sql, sqlParams, function (err, rows, fields) {
+            if (err) throw err;
+            console.log(rows);
+            res.send(rows);
+        })  
+    }
+})
 
 
 /**************   Login routes *****************
@@ -165,14 +186,14 @@ app.post("/bookDelete", function (req, res) {
 
 //Starting the web server
 //NOte can't put in other info or heroku won't work
-/* app.listen(port, ip,
+ app.listen(port, ip,
     function () {
         console.log("Express server is running");
-    }); */
-app.listen(process.env.PORT, process.env.IP,
-    function () {
-        console.log("Express server is running");
-    });
+    }); 
+// app.listen(process.env.PORT, process.env.IP,
+//     function () {
+//         console.log("Express server is running");
+//     });
 
 
 /********* Helpful Functions ***************
