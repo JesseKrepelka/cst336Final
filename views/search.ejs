@@ -1,0 +1,39 @@
+<%- include('partials/header.ejs') %>
+<!-- Default form contact -->
+
+<form class="text-center border border-light p-5 mainForm" action="/searchBook" method="GET">
+
+    <p class="h4 mb-4">Search Books</p>
+
+    <!-- Title -->
+    <input type="text" id="defaultContactFormName" class="form-control mb-4" placeholder="Title" name="title">
+
+    <!-- Author -->
+    <input type="email" id="defaultContactFormEmail" class="form-control mb-4" placeholder="Author" name="author">
+
+    <!-- Genre -->
+    <label>Genre</label>
+    <select class="browser-default custom-select mb-4" name="genre">
+        <option value="" selected>Choose option</option>
+        <option name="Mystery" value="Mystery">Mystery</option>
+        <option name="Science Fiction" value="Science Fiction">Science Fiction</option>
+        <option name="Fiction" value="Fiction">Fiction</option>
+        <option name="History" value="History">History</option>
+        <option name="Political Science" value="Political Science">Political Science</option>
+        <option name="Non Fiction" value="Non Fiction">Non Fiction</option>
+        <option name="Adventure" value="Adventure">Adventure</option>
+        <option name="Romance" value="Romance">Romance</option>
+    </select>
+
+    <!-- ISBN -->
+    <input type="email" id="defaultContactFormEmail" class="form-control mb-4" placeholder="ISBN" name="ISBN">
+
+    <button class="btn btn-info btn-block" type="submit">Send</button>
+
+</form>
+
+<div id="countItems" style="text-align: center;color: red"></div>
+<div class="card-group"></div>
+
+
+<%- include('partials/footer.ejs') %>
