@@ -110,7 +110,6 @@ app.get("/searchBook", function(req, res) {
     let author = req.query.author;
     let genre = req.query.genre;
     let isbn = req.query.isbn;
-    console.log(genre);
     if (title || author || genre || isbn) {
         let sql = "SELECT b.title, b.isbn, b.imageUrl, b.price, a.auth_name, d.genre, d.books_id FROM books AS b INNER JOIN descriptors AS d ON b.id = d.books_id  INNER JOIN authors AS a ON b.id = a.books_id WHERE title = ? OR auth_name = ? OR genre = ? OR isbn = ?";
         let sqlParams = [req.query.title, req.query.author, req.query.genre, req.query.isbn]

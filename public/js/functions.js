@@ -71,7 +71,8 @@ $(document).ready(function () {
             url: url,
             data: form.serialize(), 
             success: function(data) {
-                $(".card-group").empty()
+                $(".card-group").empty();
+                $("#countItems").empty();
                 data.forEach(function (img, index) {
                     $('<div class="card' + index +  '"style="width: 18rem;">').appendTo(".card-group");
                     $('<img style="width: 18rem; height: 18rem;" src="' + img.imageUrl + '">').appendTo(".card" + index );
@@ -81,7 +82,18 @@ $(document).ready(function () {
                     $('<input type="hidden" class="bookID" value="' + img.books_id + '">').appendTo(".card" + index);
                     $('<button class="btn btn-grad addToCart" type="button"><i class="fas fa-shopping-cart"></i>Add to Cart</button>').appendTo(".card" + index);
                 });
-                $("#countItems").html("Number of " + data[0].genre + " books: " + data.length);
+                let name = "";
+                if (data.length == 1) { 
+                    name = data[0].title;
+                }
+                else if (genre) { 
+                    name = data[0].genre;
+                }
+                else if (author) { 
+                    name = data[0].author;
+                }
+
+                $("#countItems").html("Number of " + name + " books: " + data.length);
                 form[0].reset();
             }
         });
