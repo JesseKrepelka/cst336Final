@@ -102,7 +102,7 @@ app.get("/buyCartSuccess", function (req, res) {
 });
 
 app.get('/search', function(req,res) { 
-    res.render("search", { isAdmin: false });
+    res.render("search", { isAdmin: false, "success": 0  });
 })
 
 app.get("/searchBook", function(req, res) { 
@@ -110,8 +110,9 @@ app.get("/searchBook", function(req, res) {
     let author = req.query.author;
     let genre = req.query.genre;
     let isbn = req.query.isbn;
+    console.log(genre);
     if (title || author || genre || isbn) {
-        let sql = "SELECT b.title, b.isbn, a.auth_name, d.genre FROM books AS b INNER JOIN descriptors AS d ON b.id = d.books_id  INNER JOIN authors AS a ON b.id = a.books_id WHERE title = ? OR auth_name = ? OR genre = ? OR isbn = ?";
+        let sql = "SELECT b.title, b.isbn, b.imageUrl, b.price, a.auth_name, d.genre, d.books_id FROM books AS b INNER JOIN descriptors AS d ON b.id = d.books_id  INNER JOIN authors AS a ON b.id = a.books_id WHERE title = ? OR auth_name = ? OR genre = ? OR isbn = ?";
         let sqlParams = [req.query.title, req.query.author, req.query.genre, req.query.isbn]
         pool.query(sql, sqlParams, function (err, rows, fields) {
             if (err) throw err;

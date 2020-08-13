@@ -25,7 +25,7 @@ $(document).ready(function () {
         
     }
 
-    $(".addToCart").click(function(){
+    $(document).on("click", ".addToCart", function(){
         //let id = this.querySelectorAll('.bookID');
         let id = $(this).siblings(".bookID").val();
         console.log(id);
@@ -60,6 +60,32 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(".mainForm").on("submit", function(e) { 
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        $.ajax({
+            type: "GET",
+            dataType: 'JSON',
+            url: url,
+            data: form.serialize(), 
+            success: function(data) {
+                $(".card-group").empty()
+                data.forEach(function (img, index) {
+                    $('<div class="card' + index +  '"style="width: 18rem;">').appendTo(".card-group");
+                    $('<img style="width: 18rem; height: 18rem;" src="' + img.imageUrl + '">').appendTo(".card" + index );
+                    $('<div class="card-body"><h5 class="card-title">Title: ' + img.title + '</h5>').appendTo(".card" + index);
+                    $('<h5 class="card-title">Author: ' + img.auth_name + '</h5>').appendTo(".card" + index);
+                    $('<p class="card-text">Price: ' + img.price + '</p></div>').appendTo(".card" + index);
+                    $('<input type="hidden" class="bookID" value="' + img.books_id + '">').appendTo(".card" + index);
+                    $('<button class="btn btn-grad addToCart" type="button"><i class="fas fa-shopping-cart"></i>Add to Cart</button>').appendTo(".card" + index);
+                });
+                $("#countItems").html("Number of " + data[0].genre + " books: " + data.length);
+                form[0].reset();
+            }
+        });
+    })
 
     if(flagSuccess == 1){
 

@@ -1,7 +1,25 @@
 <%- include('partials/header.ejs') %>
+<% if(success != undefined && success == 1){
+%>
+
+<script>
+  let flagSuccess = 1;
+</script>
+
+<%
+} %>
+<% if(success != undefined && success == 2){
+  %>
+  
+  <script>
+    let flagSuccess = 2;
+  </script>
+  
+  <%
+  } %>
 <!-- Default form contact -->
 
-<form class="text-center border border-light p-5 mainForm" action="/searchBook" >
+<form class="text-center border border-light p-5 mainForm" action="/searchBook" method="GET">
 
     <p class="h4 mb-4">Search Books</p>
 
@@ -13,12 +31,16 @@
 
     <!-- Genre -->
     <label>Genre</label>
-    <select class="browser-default custom-select mb-4">
-        <option value="" disabled>Choose option</option>
-        <option value="1" selected>Action and Adventure</option>
-        <option value="2">Detective and Mystery</option>
-        <option value="3">Horror</option>
-        <option value="4">Science Fiction (Sci-Fi)</option>
+    <select class="browser-default custom-select mb-4" name="genre">
+        <option value="" selected>Choose option</option>
+        <option name="Mystery" value="Mystery">Mystery</option>
+        <option name="Science Fiction" value="Science Fiction">Science Fiction</option>
+        <option name="Fiction" value="Fiction">Fiction</option>
+        <option name="History" value="History">History</option>
+        <option name="Political Science" value="Political Science">Political Science</option>
+        <option name="Non Fiction" value="Non Fiction">Non Fiction</option>
+        <option name="Adventure" value="Adventure">Adventure</option>
+        <option name="Romance" value="Romance">Romance</option>
     </select>
 
     <!-- ISBN -->
@@ -28,29 +50,8 @@
 
 </form>
 
-<div id="server-results"></div>
+<div id="countItems" style="text-align: center;color: red"></div>
+<div class="card-group"></div>
 
-<script>
-
-$(".mainForm").on("submit", function(e) { 
-    e.preventDefault();
-    var form = $(this);
-    var url = form.attr('action');
-
-    $.ajax({
-           type: "GET",
-           dataType : 'json',
-           url: url,
-           data: form.serialize(), // serializes the form's elements.
-           success: function(data)
-           {
-            console.log(data)
-            $("#server-results").html(data[0].title);
-           }
-         });
-
-})
-
-</script>
 
 <%- include('partials/footer.ejs') %>
