@@ -214,14 +214,11 @@ app.post("/bookUpdate", function (req, res) {
     sqlSelect = "Select isbn FROM books where isbn = ?";
     sqlSelectParams = [req.body.ISBN];
     pool.query(sqlSelect, sqlSelectParams, function (err, rows, fields) {
-
-
         if (rows.length >= 1) {
             console.log("entering the update function");
-            sqlUpdate = "UPDATE books b, descriptors d, authors a "
+            sqlUpdate = "UPDATE books b INNER JOIN descriptors d ON b.id = d.books_id INNER JOIN authors a ON b.id = a.books_id "
                 + "SET b.isbn = ?, b.imageUrl = ?, b.title = ?, d.genre = ?, a.auth_name = ?, b.stock = ? WHERE b.isbn = ?";
             sqlUpdateParams = [req.body.ISBN, req.body.imageURI, req.body.title, req.body.genre, req.body.author, req.body.stock, req.body.ISBN];
-
             pool.query(sqlUpdate, sqlUpdateParams, function (err, rows, fields) {
                 if (err) {
                     //res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true });
@@ -230,7 +227,6 @@ app.post("/bookUpdate", function (req, res) {
                 //console.log(rows);
                 res.render("bookManager", { bookUpdated: true, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: false, isAdmin: req.session.isAdmin });
             })
-
         }
         else {
             console.log("entering the insert side");
@@ -238,7 +234,6 @@ app.post("/bookUpdate", function (req, res) {
             sqlDescriptors = "INSERT INTO descriptors (books_id, genre) VALUES (?,?)";
             sqlAuthors = "INSERT INTO authors (books_id, auth_name) VALUES (?, ?)";
             bookId = null;
-
             pool.query(sqlBooks, [req.body.ISBN, req.body.imageURI, req.body.title, req.body.stock], function (err, rows, fields) {
                 if (err) {
                     res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true, noRecords: false, login: false, isAdmin: req.session.isAdmin });
@@ -246,14 +241,12 @@ app.post("/bookUpdate", function (req, res) {
                 }
                 //console.log(rows.insertId);
                 bookId = rows.insertId;
-
                 pool.query(sqlDescriptors, [bookId, req.body.genre], function (err, rows, fields) {
                     if (err) {
                         res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true, noRecords: false, login: false, isAdmin: req.session.isAdmin });
                         throw err;
                     }
                     // console.log(rows);
-
                     pool.query(sqlAuthors, [bookId, req.body.author], function (err, rows, fields) {
                         if (err) {
                             res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true, noRecords: false, login: false, isAdmin: req.session.isAdmin });
@@ -261,17 +254,11 @@ app.post("/bookUpdate", function (req, res) {
                         }
                         // console.log(rows);
                         res.render("bookManager", { bookUpdated: false, bookAdded: true, bookDeleted: false, error: false, noRecords: false, login: false, isAdmin: req.session.isAdmin });
-
                     });
-
                 })
-
             });
-
         }
-
     });
-
 });
 
 
@@ -303,12 +290,12 @@ app.post("/bookDelete", function (req, res) {
     function () {
         console.log("Express server is running");
     }); 
-    
+/*   
 app.listen(process.env.PORT, process.env.IP,
     function () {
         console.log("Express server is running");
 });
-
+*/
 /*
 app.listen(3000,function(){
     console.log("Express server is running");
