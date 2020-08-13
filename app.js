@@ -29,7 +29,7 @@ const ip = process.env.IP || "127.0.0.1";
 
 //default route
 app.get("/", function (req, res) {
-    console.log(req.session.isAdmin);
+    //console.log(req.session.isAdmin);
     let sql = "SELECT * FROM books LEFT JOIN authors ON books.id = authors.books_id ORDER BY id";
     var randNumbers = new Array();
     for(let i=0; i<3; ){
@@ -68,7 +68,7 @@ app.get("/addToCartSuccess", function (req, res) {
         if (!randNumbers.includes(number)){
             randNumbers[i] = number;
             i++;
-            console.log("Number inserted: " + number);
+            //console.log("Number inserted: " + number);
         }
     }
     
@@ -89,7 +89,7 @@ app.get("/buyCartSuccess", function (req, res) {
         if (!randNumbers.includes(number)){
             randNumbers[i] = number;
             i++;
-            console.log("Number inserted: " + number);
+            //console.log("Number inserted: " + number);
         }
     }
     
@@ -115,7 +115,7 @@ app.get("/searchBook", function(req, res) {
         let sqlParams = [req.query.title, req.query.author, req.query.genre, req.query.isbn]
         pool.query(sql, sqlParams, function (err, rows, fields) {
             if (err) throw err;
-            console.log(rows);
+            //console.log(rows);
             res.send(rows);
         })  
     }
@@ -144,13 +144,13 @@ app.post("/login", function (req, res) {
         if (err) {
             throw err;
         }
-        console.log(rows.length);
         if(rows.length != 0){
             req.session.isAdmin = true;
             let loginbool = true;
+            res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: loginbool, isAdmin: req.session.isAdmin });
+        } else {
+            res.render("login", { isAdmin: req.session.isAdmin })
         }
-        console.log(req.session.isAdmin);
-        res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: false, noRecords: false, login: loginbool, isAdmin: req.session.isAdmin });
     });
 });
 
@@ -277,7 +277,7 @@ app.post("/bookDelete", function (req, res) {
             res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true, noRecords: false, login: false, isAdmin: req.session.isAdmin });
             throw err;
         }
-        console.log(rows);
+        //console.log(rows);
         if (rows.affectedRows >= 1) {
             recordsFound = false;
             res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: true, error: false, noRecords: recordsFound, login: false, isAdmin: req.session.isAdmin });
