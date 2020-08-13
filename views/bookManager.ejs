@@ -64,23 +64,23 @@ if(bookAdded) { %>
             <form action="/bookUpdate" method="POST">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="title">Title:</label>
+                        <label for="title">Title</label>
                         <input type="text" class="form-control" id="title" name="title" placeholder="1984" required>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="author">Author:</label>
+                        <label for="author">Author</label>
                         <input type="text" class="form-control" id="author" name="author" placeholder="George Orwell"
                             required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col">
-                        <label for="ISBN">ISBN: </label>
+                        <label for="ISBN">ISBN</label>
                         <input type="text" class="form-control" id="ISBN" name="ISBN" placeholder="9780451524935"
                             required>
                     </div>
                     <div class="form-group col">
-                        <label for="genre">Genre:</label>
+                        <label for="genre">Genre</label>
                         <input type="text" class="form-control" placeholder="Science Fiction" id="genre" name="genre">
                     </div>
                     <div class="form-group col-md-2">
@@ -90,12 +90,16 @@ if(bookAdded) { %>
                 </div>
                 <div class="form-row">
                     <div class="form-group col">
-                        <label for="imageURI">imageURI: </label>
-                        <input type="text" class="form-control" id="imageURI" name="imageURI" placeholder="">
+                        <label for="imageURI">imageURI</label>
+                        <input type="text" class="form-control" id="imageURI" name="imageURI" placeholder="http://covers.openlibrary.org/b/isbn/9780425241141-M.jpg">
                     </div>
                     <div class="form-group col">
-                        <label for="stock">Number in Stock: </label>
-                        <input type="number" class="form-control" id="stock" name="stock" placeholder="">
+                        <label for="stock">Stock</label>
+                        <input type="number" class="form-control" id="stock" name="stock" placeholder="10">
+                    </div>
+                    <div class="form-group col">
+                        <label for="price">Price </label>
+                        <input type="text" class="form-control" id="price" name="price" placeholder="3.50">
                     </div>
                 </div>
                 <div class="form-row">

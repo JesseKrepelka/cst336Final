@@ -16,7 +16,8 @@ $(document).ready(function () {
                 genre: $("#genre").val(),
                 year: $("#year").val(),
                 imageURI: $("#imageURI").val(),
-                stock: $("#stock").val()
+                stock: $("#stock").val(),
+                price: $("#price").val()
             },
             success: function (result, status) {
                 console.log(result.status)

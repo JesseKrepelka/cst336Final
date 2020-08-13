@@ -217,8 +217,8 @@ app.post("/bookUpdate", function (req, res) {
         if (rows.length >= 1) {
             console.log("entering the update function");
             sqlUpdate = "UPDATE books b INNER JOIN descriptors d ON b.id = d.books_id INNER JOIN authors a ON b.id = a.books_id "
-                + "SET b.isbn = ?, b.imageUrl = ?, b.title = ?, d.genre = ?, a.auth_name = ?, b.stock = ? WHERE b.isbn = ?";
-            sqlUpdateParams = [req.body.ISBN, req.body.imageURI, req.body.title, req.body.genre, req.body.author, req.body.stock, req.body.ISBN];
+                + "SET b.isbn = ?, b.imageUrl = ?, b.title = ?, d.genre = ?, a.auth_name = ?, b.stock = ?, b.price = ? WHERE b.isbn = ?";
+            sqlUpdateParams = [req.body.ISBN, req.body.imageURI, req.body.title, req.body.genre, req.body.author, req.body.stock, req.body.price, req.body.ISBN];
             pool.query(sqlUpdate, sqlUpdateParams, function (err, rows, fields) {
                 if (err) {
                     //res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true });
@@ -230,11 +230,11 @@ app.post("/bookUpdate", function (req, res) {
         }
         else {
             console.log("entering the insert side");
-            sqlBooks = "INSERT INTO books (isbn, imageUrl, title, stock) VALUES (?,?,?,?)";
+            sqlBooks = "INSERT INTO books (isbn, imageUrl, title, stock, price) VALUES (?,?,?,?,?)";
             sqlDescriptors = "INSERT INTO descriptors (books_id, genre) VALUES (?,?)";
             sqlAuthors = "INSERT INTO authors (books_id, auth_name) VALUES (?, ?)";
             bookId = null;
-            pool.query(sqlBooks, [req.body.ISBN, req.body.imageURI, req.body.title, req.body.stock], function (err, rows, fields) {
+            pool.query(sqlBooks, [req.body.ISBN, req.body.imageURI, req.body.title, req.body.stock, req.body.price], function (err, rows, fields) {
                 if (err) {
                     res.render("bookManager", { bookUpdated: false, bookAdded: false, bookDeleted: false, error: true, noRecords: false, login: false, isAdmin: req.session.isAdmin });
                     throw err;
