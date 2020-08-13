@@ -286,16 +286,17 @@ app.post("/bookDelete", function (req, res) {
 
 //Starting the web server
 //NOte can't put in other info or heroku won't work
+/*
  app.listen(port, ip,
     function () {
         console.log("Express server is running");
     }); 
-/*   
+*/   
 app.listen(process.env.PORT, process.env.IP,
     function () {
         console.log("Express server is running");
 });
-*/
+
 /*
 app.listen(3000,function(){
     console.log("Express server is running");
